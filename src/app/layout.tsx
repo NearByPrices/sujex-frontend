@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "ERP + CRM Platform",
-  description: "Multi-tenant ERP and CRM platform for small and medium businesses",
+  title: "Sujex ERP",
+  description: "Multi-tenant ERP and CRM platform",
 };
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
