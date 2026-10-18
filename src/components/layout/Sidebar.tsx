@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard, Users, TrendingUp, Target, Package, Warehouse, ShoppingCart,
-  FileText, UserCircle, DollarSign, FolderOpen, Settings, LogOut
+  FileText, UserCircle, DollarSign, FolderOpen, Settings, LogOut, Truck, ClipboardList
 } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 
@@ -18,6 +18,8 @@ const nav = [
   { label: 'Warehouses', href: '/inventory/warehouses', icon: Warehouse },
   { label: 'Sales Orders', href: '/sales/orders', icon: ShoppingCart },
   { label: 'Invoices', href: '/sales/invoices', icon: FileText },
+  { label: 'Vendors', href: '/purchase/vendors', icon: Truck },
+  { label: 'Purchase Orders', href: '/purchase/orders', icon: ClipboardList },
   { label: 'Employees', href: '/hr/employees', icon: UserCircle },
   { label: 'Finance', href: '/finance/accounts', icon: DollarSign },
   { label: 'Projects', href: '/projects', icon: FolderOpen },
