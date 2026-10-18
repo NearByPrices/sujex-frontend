@@ -29,7 +29,13 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     setError('')
     try {
-      const res = await api.post<ApiResponse<AuthResponse>>('/api/v1/auth/login', data)
+      let res = await api.post<ApiResponse<AuthResponse>>('/api/v1/auth/login', data).catch(async (e) => {
+        const msg: string = e?.response?.data?.message ?? ''
+        if (msg.toLowerCase().includes('platform')) {
+          return api.post<ApiResponse<AuthResponse>>('/api/platform/auth/login', data)
+        }
+        throw e
+      })
       const { accessToken, refreshToken, user } = res.data.data
       setUser(user, accessToken, refreshToken)
       router.push('/dashboard')

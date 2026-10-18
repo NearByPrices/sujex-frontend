@@ -17,8 +17,8 @@ export function useJournalEntries(page = 1) {
     queryKey: ['journal-entries', page],
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
-      const res = await api.get<ApiResponse<JournalEntry[]>>(`/api/v1/finance/journal-entries?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<{ items: JournalEntry[]; pagination: unknown }>>(`/api/v1/finance/journal-entries?${params}`)
+      return { data: res.data.data?.items ?? [], pagination: res.data.pagination }
     },
   })
 }
@@ -29,8 +29,8 @@ export function useSalesInvoices(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<ApiResponse<SalesInvoice[]>>(`/api/v1/sales/invoices?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<{ items: SalesInvoice[]; pagination: unknown }>>(`/api/v1/sales/invoices?${params}`)
+      return { data: res.data.data?.items ?? [], pagination: res.data.pagination }
     },
   })
 }

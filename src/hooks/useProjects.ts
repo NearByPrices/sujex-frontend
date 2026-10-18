@@ -8,8 +8,8 @@ export function useProjects(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<ApiResponse<Project[]>>(`/api/v1/projects?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<{ items: Project[]; pagination: unknown }>>(`/api/v1/projects?${params}`)
+      return { data: res.data.data?.items ?? [], pagination: res.data.pagination }
     },
   })
 }

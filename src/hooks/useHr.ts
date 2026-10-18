@@ -8,8 +8,8 @@ export function useEmployees(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<ApiResponse<Employee[]>>(`/api/v1/hr/employees?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<{ items: Employee[]; pagination: unknown }>>(`/api/v1/hr/employees?${params}`)
+      return { data: res.data.data?.items ?? [], pagination: res.data.pagination }
     },
   })
 }
@@ -56,8 +56,8 @@ export function useLeaveRequests(page = 1) {
     queryKey: ['leave-requests', page],
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
-      const res = await api.get<ApiResponse<LeaveRequest[]>>(`/api/v1/hr/leave-requests?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<{ items: LeaveRequest[]; pagination: unknown }>>(`/api/v1/hr/leave-requests?${params}`)
+      return { data: res.data.data?.items ?? [], pagination: res.data.pagination }
     },
   })
 }
