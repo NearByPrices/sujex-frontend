@@ -9,16 +9,17 @@ import api from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-interface Company { id: string; name: string; code?: string; email?: string; phone?: string; address?: string; website?: string; taxNumber?: string }
+interface Company { id: string; name: string; email?: string; phone?: string; addressLine1?: string; website?: string; taxId?: string; baseCurrency?: string; timezone?: string }
 
 const schema = z.object({
   name: z.string().min(1, 'Company name required'),
-  code: z.string().optional(),
   email: z.string().email().optional().or(z.literal('')),
   phone: z.string().optional(),
-  address: z.string().optional(),
+  addressLine1: z.string().optional(),
   website: z.string().optional(),
-  taxNumber: z.string().optional(),
+  taxId: z.string().optional(),
+  baseCurrency: z.string().min(3).max(3),
+  timezone: z.string().min(1),
 })
 type FormData = z.infer<typeof schema>
 
@@ -26,11 +27,19 @@ export default function CompanySettingsPage() {
   const qc = useQueryClient()
   const { data: company, isLoading } = useQuery<Company>({
     queryKey: ['company-settings'],
-    queryFn: () => api.get('/api/v1/foundation/companies/current').then(r => r.data.data),
+    queryFn: () => api.get('/api/v1/companies').then(r => r.data.data?.[0]),
   })
 
   const update = useMutation({
-    mutationFn: (data: Record<string, unknown>) => api.put(`/api/v1/foundation/companies/${company?.id}`, data).then(r => r.data),
+    mutationFn: (data: Record<string, unknown>) => api.put(`/api/v1/companies/${company?.id}`, {
+      ...data,
+      addressLine2: null,
+      city: null,
+      state: null,
+      country: null,
+      postalCode: null,
+      dateFormat: 'MMM dd, yyyy',
+    }).then(r => r.data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['company-settings'] }),
   })
 
@@ -53,8 +62,7 @@ export default function CompanySettingsPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg bg-white p-6 shadow-sm border border-gray-100 space-y-4">
         <Input label="Company Name" error={errors.name?.message} {...register('name')} />
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Code" {...register('code')} />
-          <Input label="Tax Number" {...register('taxNumber')} />
+          <Input label="Tax Number" {...register('taxId')} />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <Input label="Email" type="email" error={errors.email?.message} {...register('email')} />
@@ -66,8 +74,13 @@ export default function CompanySettingsPage() {
           <textarea
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
             rows={3}
-            {...register('address')}
+            {...register('addressLine1')}
           />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Input label="Base Currency" {...register('baseCurrency')} />
+          <Input label="Timezone" {...register('timezone')} />
         </div>
 
         {update.isSuccess && <p className="text-sm text-green-600">Settings saved successfully.</p>}

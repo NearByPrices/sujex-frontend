@@ -121,7 +121,7 @@ export default function VendorsPage() {
 
       {pagination && (
         <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-          <span>{pagination.totalCount} total</span>
+          <span>{pagination.totalCount ?? pagination.total} total</span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Previous</Button>
             <Button variant="outline" size="sm" disabled={vendors.length < pagination.pageSize} onClick={() => setPage(p => p + 1)}>Next</Button>

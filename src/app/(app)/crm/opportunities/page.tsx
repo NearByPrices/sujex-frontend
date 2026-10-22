@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatDate, formatCurrency } from '@/lib/utils'
 import { Plus } from 'lucide-react'
+import Link from 'next/link'
 
 const statusColor: Record<string, 'default' | 'info' | 'warning' | 'success' | 'danger'> = {
   Open: 'info',
@@ -44,7 +45,7 @@ export default function OpportunitiesPage() {
             )}
             {data?.data?.map((o) => (
               <tr key={o.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium text-gray-900">{o.title}</td>
+                <td className="px-4 py-3 font-medium text-blue-700"><Link href={`/crm/opportunities/${o.id}`} className="hover:underline">{o.title}</Link></td>
                 <td className="px-4 py-3"><Badge variant={statusColor[o.status] ?? 'default'}>{o.status}</Badge></td>
                 <td className="px-4 py-3 text-gray-600">{o.stage ?? '—'}</td>
                 <td className="px-4 py-3 text-gray-600">{o.expectedValue != null ? formatCurrency(o.expectedValue) : '—'}</td>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
 import { Plus, Search } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ContactsPage() {
   const [search, setSearch] = useState('')
@@ -52,7 +53,7 @@ export default function ContactsPage() {
             )}
             {data?.data?.map((c) => (
               <tr key={c.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium text-gray-900">{c.fullName}</td>
+                <td className="px-4 py-3 font-medium text-blue-700"><Link href={`/crm/contacts/${c.id}`} className="hover:underline">{c.fullName}</Link></td>
                 <td className="px-4 py-3 text-gray-600">{c.email ?? '—'}</td>
                 <td className="px-4 py-3 text-gray-600">{c.phone ?? '—'}</td>
                 <td className="px-4 py-3 text-gray-600">{c.jobTitle ?? '—'}</td>

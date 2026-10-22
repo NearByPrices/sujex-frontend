@@ -26,7 +26,7 @@ export default function ProjectsPage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
         <Link href="/projects/new">
-          <Button size="sm"><Plus size={14} className="mr-1" /> New Project</Button>
+        <Link href="/projects/new"><Button size="sm"><Plus size={14} className="mr-1" /> New Project</Button></Link>
         </Link>
       </div>
 

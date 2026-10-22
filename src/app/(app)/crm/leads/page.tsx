@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatDate, formatCurrency } from '@/lib/utils'
 import { Plus, Search, ArrowRightCircle } from 'lucide-react'
+import Link from 'next/link'
 
 const statusVariant: Record<string, 'default' | 'info' | 'warning' | 'success' | 'danger'> = {
   New: 'info',
@@ -59,7 +60,7 @@ export default function LeadsPage() {
             )}
             {data?.data?.map((l) => (
               <tr key={l.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium text-gray-900">{l.title}</td>
+                <td className="px-4 py-3 font-medium text-blue-700"><Link href={`/crm/leads/${l.id}`} className="hover:underline">{l.title}</Link></td>
                 <td className="px-4 py-3 text-gray-600">{[l.firstName, l.lastName].filter(Boolean).join(' ') || '—'}</td>
                 <td className="px-4 py-3">
                   <Badge variant={statusVariant[l.status] ?? 'default'}>{l.status}</Badge>

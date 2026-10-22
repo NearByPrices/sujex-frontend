@@ -49,7 +49,7 @@ export default function NewProductPage() {
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center gap-3">
         <Link href="/inventory/products">
-          <Button variant="outline" size="sm"><ArrowLeft size={14} className="mr-1" /> Back</Button>
+          <Link href="/inventory/products"><Button variant="outline" size="sm"><ArrowLeft size={14} className="mr-1" /> Back</Button></Link>
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">New Product</h1>
       </div>

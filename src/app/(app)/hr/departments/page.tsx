@@ -8,6 +8,7 @@ import { useDepartments, useCreateDepartment } from '@/hooks/useHr'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Plus, X } from 'lucide-react'
+import { useCompanies } from '@/hooks/useFoundation'
 
 const schema = z.object({
   name: z.string().min(1, 'Name required'),
@@ -20,6 +21,7 @@ export default function DepartmentsPage() {
   const [showForm, setShowForm] = useState(false)
   const { data: departments, isLoading } = useDepartments()
   const createDepartment = useCreateDepartment()
+  const { data: companies, isLoading: companiesLoading } = useCompanies()
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -46,7 +48,14 @@ export default function DepartmentsPage() {
           <div className="grid grid-cols-3 gap-3">
             <Input label="Name" error={errors.name?.message} {...register('name')} />
             <Input label="Code" {...register('code')} />
-            <Input label="Company ID" error={errors.companyId?.message} {...register('companyId')} />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+              <select disabled={companiesLoading} className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm" {...register('companyId')}>
+                <option value="">Select company</option>
+                {companies?.map(company => <option key={company.id} value={company.id}>{company.name}</option>)}
+              </select>
+              {errors.companyId && <p className="mt-1 text-xs text-red-600">{errors.companyId.message}</p>}
+            </div>
           </div>
           <div className="mt-3">
             <Button type="submit" size="sm" isLoading={isSubmitting}>Save</Button>

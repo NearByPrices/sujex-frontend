@@ -58,21 +58,28 @@ export default function InvoicesPage() {
               <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">No invoices</td></tr>
             )}
             {data?.data?.map((inv) => (
-              <tr key={inv.id} className="hover:bg-gray-50">
+              (() => {
+                const total = Number(inv.totalAmount ?? inv.total ?? 0)
+                const paid = Number(inv.paidAmount ?? 0)
+                const balance = Number(inv.balanceDue ?? total - paid)
+                const currency = inv.currencyCode ?? inv.currency ?? ''
+
+                return <tr key={inv.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-mono text-xs text-gray-500">{inv.invoiceNumber}</td>
-                <td className="px-4 py-3 text-gray-900">{inv.customerName ?? '—'}</td>
+                <td className="px-4 py-3 text-gray-900">{inv.customerName ?? inv.salesOrderNumber ?? '—'}</td>
                 <td className="px-4 py-3 text-gray-600">{formatDate(inv.invoiceDate)}</td>
                 <td className="px-4 py-3 text-gray-600">{formatDate(inv.dueDate)}</td>
                 <td className="px-4 py-3 text-right font-mono text-gray-700">
-                  {inv.total.toLocaleString('en-US', { minimumFractionDigits: 2 })} {inv.currency}
+                  {total.toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency}
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-gray-700">
-                  {inv.balanceDue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  {balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency}
                 </td>
                 <td className="px-4 py-3">
                   <Badge variant={statusVariant[inv.status] ?? 'default'}>{inv.status}</Badge>
                 </td>
-              </tr>
+                </tr>
+              })()
             ))}
           </tbody>
         </table>

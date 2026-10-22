@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
+import type { ApiResponse, PagedResult, PurchaseOrder, Vendor, PaginationMeta } from '@/types/api'
 
 export function useVendors(page = 1, search?: string) {
   return useQuery({
@@ -7,8 +8,8 @@ export function useVendors(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<{ data: { items: unknown[]; pagination: unknown }; pagination: unknown }>(`/api/v1/purchase/vendors?${params}`)
-      return { data: res.data.data?.items ?? [], pagination: res.data.pagination }
+      const res = await api.get<ApiResponse<PagedResult<Vendor>>>(`/api/v1/purchase/vendors?${params}`)
+      return { data: res.data.data?.items ?? [], pagination: res.data.pagination as PaginationMeta | undefined }
     },
   })
 }
@@ -35,8 +36,8 @@ export function usePurchaseOrders(page = 1, status?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (status) params.set('status', status)
-      const res = await api.get<{ data: { items: unknown[]; pagination: unknown }; pagination: unknown }>(`/api/v1/purchase/orders?${params}`)
-      return { data: res.data.data?.items ?? [], pagination: res.data.pagination }
+      const res = await api.get<ApiResponse<PagedResult<PurchaseOrder>>>(`/api/v1/purchase/orders?${params}`)
+      return { data: res.data.data?.items ?? [], pagination: res.data.pagination as PaginationMeta | undefined }
     },
   })
 }

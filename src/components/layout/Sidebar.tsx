@@ -6,25 +6,19 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard, Users, TrendingUp, Target, Package, Warehouse, ShoppingCart,
-  FileText, UserCircle, DollarSign, FolderOpen, Settings, LogOut, Truck, ClipboardList
+  FileText, UserCircle, DollarSign, FolderOpen, Settings, LogOut, Truck, ClipboardList,
+  Activity, Boxes, Building2, CalendarDays, BookOpen, Network
 } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 
-const nav = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Contacts', href: '/crm/contacts', icon: Users },
-  { label: 'Leads', href: '/crm/leads', icon: TrendingUp },
-  { label: 'Opportunities', href: '/crm/opportunities', icon: Target },
-  { label: 'Products', href: '/inventory/products', icon: Package },
-  { label: 'Warehouses', href: '/inventory/warehouses', icon: Warehouse },
-  { label: 'Sales Orders', href: '/sales/orders', icon: ShoppingCart },
-  { label: 'Invoices', href: '/sales/invoices', icon: FileText },
-  { label: 'Vendors', href: '/purchase/vendors', icon: Truck },
-  { label: 'Purchase Orders', href: '/purchase/orders', icon: ClipboardList },
-  { label: 'Employees', href: '/hr/employees', icon: UserCircle },
-  { label: 'Finance', href: '/finance/accounts', icon: DollarSign },
-  { label: 'Projects', href: '/projects', icon: FolderOpen },
-  { label: 'Settings', href: '/settings', icon: Settings },
+const groups = [
+  { label: 'Overview', items: [{ label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }] },
+  { label: 'CRM', items: [{ label: 'Contacts', href: '/crm/contacts', icon: Users }, { label: 'Leads', href: '/crm/leads', icon: TrendingUp }, { label: 'Opportunities', href: '/crm/opportunities', icon: Target }, { label: 'Activities', href: '/crm/activities', icon: Activity }] },
+  { label: 'Inventory', items: [{ label: 'Products', href: '/inventory/products', icon: Package }, { label: 'Categories', href: '/inventory/categories', icon: Boxes }, { label: 'Warehouses', href: '/inventory/warehouses', icon: Warehouse }, { label: 'Stock Movements', href: '/inventory/stock-movements', icon: Network }] },
+  { label: 'Sales & Purchase', items: [{ label: 'Sales Orders', href: '/sales/orders', icon: ShoppingCart }, { label: 'Invoices', href: '/sales/invoices', icon: FileText }, { label: 'Vendors', href: '/purchase/vendors', icon: Truck }, { label: 'Purchase Orders', href: '/purchase/orders', icon: ClipboardList }] },
+  { label: 'People & Work', items: [{ label: 'Employees', href: '/hr/employees', icon: UserCircle }, { label: 'Departments', href: '/hr/departments', icon: Building2 }, { label: 'Leave Requests', href: '/hr/leave-requests', icon: CalendarDays }, { label: 'Projects', href: '/projects', icon: FolderOpen }] },
+  { label: 'Finance', items: [{ label: 'Accounts', href: '/finance/accounts', icon: DollarSign }, { label: 'Journal Entries', href: '/finance/journal-entries', icon: BookOpen }] },
+  { label: 'Administration', items: [{ label: 'Settings', href: '/settings', icon: Settings }] },
 ]
 
 export function Sidebar() {
@@ -40,7 +34,9 @@ export function Sidebar() {
         </span>
       </div>
       <nav className="flex-1 overflow-y-auto py-2">
-        {nav.map(({ label, href, icon: Icon }) => {
+        {groups.map((group) => <div key={group.label} className="mb-2">
+          <p className="px-4 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-wider text-gray-500">{group.label}</p>
+          {group.items.map(({ label, href, icon: Icon }) => {
           const active = pathname.startsWith(href)
           return (
             <Link key={href} href={href} className={cn(
@@ -51,7 +47,8 @@ export function Sidebar() {
               {label}
             </Link>
           )
-        })}
+          })}
+        </div>)}
       </nav>
       <button
         onClick={logout}

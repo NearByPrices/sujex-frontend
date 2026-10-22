@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
-import type { ApiResponse, ProductCategory, StockMovement } from '@/types/api'
+import type { ApiResponse, ProductCategory, StockMovement, PagedResult } from '@/types/api'
 
 export function useProductCategories() {
   return useQuery({
@@ -27,8 +27,8 @@ export function useStockMovements(page = 1, productId?: string, warehouseId?: st
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (productId) params.set('productId', productId)
       if (warehouseId) params.set('warehouseId', warehouseId)
-      const res = await api.get<ApiResponse<StockMovement[]>>(`/api/v1/inventory/stock-movements?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<PagedResult<StockMovement>>>(`/api/v1/stock-movements?${params}`)
+      return { data: Array.isArray(res.data.data) ? res.data.data : res.data.data?.items ?? [], pagination: res.data.pagination ?? res.data.data?.pagination }
     },
   })
 }
@@ -36,7 +36,7 @@ export function useStockMovements(page = 1, productId?: string, warehouseId?: st
 export function useCreateStockMovement() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (data: Record<string, unknown>) => api.post('/api/v1/inventory/stock-movements', data),
+    mutationFn: (data: Record<string, unknown>) => api.post('/api/v1/stock-movements', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['stock-movements'] })
       qc.invalidateQueries({ queryKey: ['products'] })

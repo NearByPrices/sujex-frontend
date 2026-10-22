@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000').replace(/\/+$/, '')
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000',
+  baseURL: apiBaseUrl,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -22,7 +24,7 @@ api.interceptors.response.use(
       const refresh = localStorage.getItem('refresh_token')
       if (refresh) {
         try {
-          const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/refresh`, { refreshToken: refresh })
+          const { data } = await axios.post(`${apiBaseUrl}/api/v1/auth/refresh`, { refreshToken: refresh })
           localStorage.setItem('access_token', data.data.accessToken)
           localStorage.setItem('refresh_token', data.data.refreshToken)
           original.headers.Authorization = `Bearer ${data.data.accessToken}`

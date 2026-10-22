@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
-import type { ApiResponse, SalesOrder } from '@/types/api'
+import type { ApiResponse, SalesOrder, PagedResult } from '@/types/api'
 
 export function useSalesOrders(page = 1, search?: string) {
   return useQuery({
@@ -8,8 +8,8 @@ export function useSalesOrders(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<ApiResponse<SalesOrder[]>>(`/api/v1/sales-orders?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<PagedResult<SalesOrder>>>(`/api/v1/sales-orders?${params}`)
+      return { data: Array.isArray(res.data.data) ? res.data.data : res.data.data?.items ?? [], pagination: res.data.pagination ?? res.data.data?.pagination }
     },
   })
 }
@@ -26,7 +26,7 @@ export function useUpdateSalesOrderStatus() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) =>
-      api.patch(`/api/v1/sales-orders/${id}/status`, status, { headers: { 'Content-Type': 'application/json' } }),
+      api.patch(`/api/v1/sales-orders/${id}/status`, { status }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['sales-orders'] }),
   })
 }

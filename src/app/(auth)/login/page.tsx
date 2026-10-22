@@ -13,7 +13,7 @@ import type { ApiResponse, AuthResponse } from '@/types/api'
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(8),
 })
 type FormData = z.infer<typeof schema>
 

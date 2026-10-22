@@ -8,6 +8,7 @@ import { Lead } from '@/types/api'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, RefreshCw } from 'lucide-react'
+import { RecordEditor, RecordField } from '@/components/ui/record-editor'
 
 function useLead(id: string) {
   return useQuery<Lead>({
@@ -29,7 +30,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ id: strin
   const { data: lead, isLoading } = useLead(id)
   const qc = useQueryClient()
   const convertLead = useMutation({
-    mutationFn: () => api.patch(`/api/v1/crm/leads/${id}/convert`).then(r => r.data),
+    mutationFn: () => api.post(`/api/v1/leads/${id}/convert`, { opportunityTitle: lead?.title ?? 'New Opportunity' }).then(r => r.data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['leads', id] }),
   })
 
@@ -44,6 +45,7 @@ export default function LeadDetailPage({ params }: { params: Promise<{ id: strin
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">{lead.title}</h1>
         <Badge variant={statusVariant[lead.status] ?? 'default'}>{lead.status}</Badge>
+        <RecordEditor value={lead as unknown as Record<string, unknown>} fields={leadFields} onSave={async data => { await api.put(`/api/v1/leads/${id}`, data); await qc.invalidateQueries({ queryKey: ['leads', id] }); await qc.invalidateQueries({ queryKey: ['leads'] }) }} />
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-100">
@@ -87,3 +89,11 @@ export default function LeadDetailPage({ params }: { params: Promise<{ id: strin
     </div>
   )
 }
+
+const leadFields: RecordField[] = [
+  { key: 'title', label: 'Title', required: true }, { key: 'firstName', label: 'First name' }, { key: 'lastName', label: 'Last name' },
+  { key: 'email', label: 'Email', type: 'email' }, { key: 'phone', label: 'Phone' }, { key: 'company', label: 'Company' }, { key: 'jobTitle', label: 'Job title' },
+  { key: 'status', label: 'Status', required: true, type: 'select', options: ['New', 'Contacted', 'Qualified', 'Unqualified', 'Converted'] },
+  { key: 'source', label: 'Source' }, { key: 'estimatedValue', label: 'Estimated value', type: 'number' }, { key: 'followUpDate', label: 'Follow-up date', type: 'date' },
+  { key: 'tags', label: 'Tags' }, { key: 'notes', label: 'Notes', type: 'textarea' },
+]

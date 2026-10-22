@@ -10,7 +10,42 @@ export interface PaginationMeta {
   page: number
   pageSize: number
   total: number
+  totalCount?: number
   totalPages: number
+}
+
+export interface Vendor {
+  id: string
+  name: string
+  code?: string
+  email?: string
+  phone?: string
+  address?: string
+  taxNumber?: string
+  currencyCode?: string
+  paymentTermsDays?: number
+  isActive: boolean
+  notes?: string
+  createdAt: string
+}
+
+export interface PurchaseOrder {
+  id: string
+  orderNumber: string
+  vendorId: string
+  vendorName?: string
+  orderDate: string
+  expectedDeliveryDate?: string
+  status: string
+  totalAmount: number
+  currencyCode?: string
+  notes?: string
+  createdAt: string
+}
+
+export interface PagedResult<T> {
+  items: T[]
+  pagination: PaginationMeta
 }
 
 // Auth
@@ -27,6 +62,32 @@ export interface UserInfo {
   avatarUrl?: string
   isPlatformAdmin: boolean
   tenantId?: string
+}
+
+export interface DashboardMetrics {
+  totalContacts: number
+  openLeads: number
+  activeOpportunities: number
+  salesOrdersThisMonth: number
+  totalProducts: number
+  activeEmployees: number
+  activeProjects: number
+  pendingLeaveRequests: number
+}
+
+export interface Company {
+  id: string
+  name: string
+  taxId?: string
+  website?: string
+  phone?: string
+  email?: string
+  addressLine1?: string
+  city?: string
+  country?: string
+  baseCurrency?: string
+  timezone?: string
+  isActive: boolean
 }
 
 // CRM
@@ -113,11 +174,14 @@ export interface Product {
   categoryName?: string
   unitId?: string
   unitName?: string
+  unitSymbol?: string
   costPrice: number
   salePrice: number
   minimumStock?: number
   maximumStock?: number
+  reorderPoint?: number
   isStockable: boolean
+  isService: boolean
   isActive: boolean
   imageUrl?: string
   totalStock?: number
@@ -153,6 +217,7 @@ export interface StockMovement {
   unitCost: number
   referenceType?: string
   referenceNumber?: string
+  reference?: string
   notes?: string
   createdAt: string
 }
@@ -182,6 +247,7 @@ export interface SalesOrder {
   taxAmount: number
   discountAmount: number
   total: number
+  totalAmount?: number
   currency: string
   notes?: string
   expectedDeliveryDate?: string
@@ -194,15 +260,18 @@ export interface SalesInvoice {
   invoiceNumber: string
   invoiceDate: string
   dueDate: string
+  salesOrderNumber?: string
   customerName?: string
   customerEmail?: string
   status: string
   subTotal: number
   taxAmount: number
-  total: number
+  totalAmount: number
+  total?: number
   paidAmount: number
   balanceDue: number
-  currency: string
+  currencyCode?: string
+  currency?: string
   createdAt: string
 }
 

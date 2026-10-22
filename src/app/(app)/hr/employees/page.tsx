@@ -25,7 +25,7 @@ export default function EmployeesPage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Employees</h1>
         <Link href="/hr/employees/new">
-          <Button size="sm"><Plus size={14} className="mr-1" /> Add Employee</Button>
+        <Link href="/hr/employees/new"><Button size="sm"><Plus size={14} className="mr-1" /> Add Employee</Button></Link>
         </Link>
       </div>
 

@@ -49,7 +49,7 @@ export default function SalesOrdersPage() {
                 <td className="px-4 py-3 text-gray-600">{formatDate(o.orderDate)}</td>
                 <td className="px-4 py-3 text-gray-600">{formatCurrency(o.subTotal)}</td>
                 <td className="px-4 py-3 text-gray-600">{formatCurrency(o.taxAmount)}</td>
-                <td className="px-4 py-3 font-semibold text-gray-900">{formatCurrency(o.totalAmount)}</td>
+                <td className="px-4 py-3 font-semibold text-gray-900">{formatCurrency(o.totalAmount ?? o.total)}</td>
                 <td className="px-4 py-3 text-gray-600">{o.lines?.length ?? 0}</td>
               </tr>
             ))}

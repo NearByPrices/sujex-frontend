@@ -44,7 +44,7 @@ export default function NewEmployeePage() {
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center gap-3">
         <Link href="/hr/employees">
-          <Button variant="outline" size="sm"><ArrowLeft size={14} className="mr-1" /> Back</Button>
+          <Link href="/hr/employees"><Button variant="outline" size="sm"><ArrowLeft size={14} className="mr-1" /> Back</Button></Link>
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">New Employee</h1>
       </div>

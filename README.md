@@ -57,7 +57,7 @@ Create `.env.local`:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://lbxkaglhusuhiflnupvv.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_kdYYaRGsZnwkPBLEjsLw-A_or3kC...
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
 **Important:** `NEXT_PUBLIC_*` variables are exposed to the browser. Never put secrets here.
@@ -323,4 +323,4 @@ console.log({ data, error });
 
 ---
 
-**Status:** Phase 1 setup in progress
+**Status:** Core tenant UI implemented; client-demo hardening in progress

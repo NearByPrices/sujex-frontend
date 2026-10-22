@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
-import type { ApiResponse, Contact, Lead, Opportunity } from '@/types/api'
+import type { ApiResponse, Contact, Lead, Opportunity, PagedResult } from '@/types/api'
 
 export function useContacts(page = 1, search?: string) {
   return useQuery({
@@ -8,8 +8,8 @@ export function useContacts(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<ApiResponse<Contact[]>>(`/api/v1/contacts?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<PagedResult<Contact>>>(`/api/v1/contacts?${params}`)
+      return { data: Array.isArray(res.data.data) ? res.data.data : res.data.data?.items ?? [], pagination: res.data.pagination ?? res.data.data?.pagination }
     },
   })
 }
@@ -28,8 +28,8 @@ export function useLeads(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<ApiResponse<Lead[]>>(`/api/v1/leads?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<PagedResult<Lead>>>(`/api/v1/leads?${params}`)
+      return { data: Array.isArray(res.data.data) ? res.data.data : res.data.data?.items ?? [], pagination: res.data.pagination ?? res.data.data?.pagination }
     },
   })
 }
@@ -59,8 +59,8 @@ export function useOpportunities(page = 1, search?: string) {
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), pageSize: '20' })
       if (search) params.set('search', search)
-      const res = await api.get<ApiResponse<Opportunity[]>>(`/api/v1/opportunities?${params}`)
-      return res.data
+      const res = await api.get<ApiResponse<PagedResult<Opportunity>>>(`/api/v1/opportunities?${params}`)
+      return { data: Array.isArray(res.data.data) ? res.data.data : res.data.data?.items ?? [], pagination: res.data.pagination ?? res.data.data?.pagination }
     },
   })
 }

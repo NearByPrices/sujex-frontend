@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { formatCurrency } from '@/lib/utils'
 import { Plus, Search } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ProductsPage() {
   const [search, setSearch] = useState('')
@@ -16,7 +17,7 @@ export default function ProductsPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-        <Button size="sm"><Plus size={14} className="mr-1" /> Add Product</Button>
+        <Link href="/inventory/products/new"><Button size="sm"><Plus size={14} className="mr-1" /> Add Product</Button></Link>
       </div>
 
       <div className="mb-4 max-w-xs">
@@ -51,7 +52,7 @@ export default function ProductsPage() {
             )}
             {data?.data?.map((p) => (
               <tr key={p.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium text-gray-900">{p.name}</td>
+                <td className="px-4 py-3 font-medium text-blue-700"><Link href={`/inventory/products/${p.id}`} className="hover:underline">{p.name}</Link></td>
                 <td className="px-4 py-3 text-gray-600">{p.sku ?? '—'}</td>
                 <td className="px-4 py-3 text-gray-600">{p.categoryName ?? '—'}</td>
                 <td className="px-4 py-3 text-gray-600">{p.unitSymbol ?? '—'}</td>

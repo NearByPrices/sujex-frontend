@@ -3,16 +3,19 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import api from '@/lib/api'
-import { Activity, PagedResult } from '@/types/api'
+import type { Activity, ApiResponse, PagedResult } from '@/types/api'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/utils'
 import { Search } from 'lucide-react'
 
 function useActivities(page = 1) {
-  return useQuery<PagedResult<Activity>>({
+  return useQuery<{ data: Activity[]; pagination?: PagedResult<Activity>['pagination'] }>({
     queryKey: ['activities', page],
-    queryFn: () => api.get('/api/v1/crm/activities', { params: { page, pageSize: 20 } }).then(r => r.data),
+    queryFn: async () => {
+      const response = await api.get<ApiResponse<PagedResult<Activity>>>('/api/v1/activities', { params: { page, pageSize: 20 } })
+      return { data: Array.isArray(response.data.data) ? response.data.data : response.data.data?.items ?? [], pagination: response.data.pagination ?? response.data.data?.pagination }
+    },
   })
 }
 
@@ -70,12 +73,12 @@ export default function ActivitiesPage() {
             {filtered?.map((a) => (
               <tr key={a.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3">
-                  <Badge variant={typeVariant[a.activityType] ?? 'default'}>{a.activityType}</Badge>
+                  <Badge variant={typeVariant[a.type] ?? 'default'}>{a.type}</Badge>
                 </td>
                 <td className="px-4 py-3 text-gray-900 font-medium">{a.subject}</td>
                 <td className="px-4 py-3 text-gray-600">{a.dueDate ? formatDate(a.dueDate) : '—'}</td>
-                <td className="px-4 py-3 text-gray-600">{a.status}</td>
-                <td className="px-4 py-3 text-gray-500 truncate max-w-xs">{a.notes ?? '—'}</td>
+                <td className="px-4 py-3 text-gray-600">{a.isCompleted ? 'Completed' : 'Open'}</td>
+                <td className="px-4 py-3 text-gray-500 truncate max-w-xs">{a.description ?? '—'}</td>
               </tr>
             ))}
           </tbody>
@@ -84,7 +87,7 @@ export default function ActivitiesPage() {
 
       {data?.pagination && (
         <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-          <span>{data.pagination.total} total</span>
+          <span>{data.pagination.totalCount ?? data.pagination.total} total</span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Previous</Button>
             <Button variant="outline" size="sm" disabled={page >= data.pagination.totalPages} onClick={() => setPage(p => p + 1)}>Next</Button>
